@@ -6,7 +6,6 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 
 export default function SignUp() {
-  const [isLoading, setIsLoading] = useState(true);
   const [newUser, setNewUser] = useState();
   const router = useRouter();
   const BACKEND_ENDPOINT = process.env.API_URL;

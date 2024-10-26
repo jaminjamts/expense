@@ -2,20 +2,16 @@
 
 import { useRouter } from "next/navigation";
 import Navbar from "../components/Navbar";
-import { RecordList } from "../components/RecordList";
+import { ListItem } from "../components/ListItem";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { lastmonth, listdatas } from "@/datas/datas";
 
 export default function Dashboard() {
   const router = useRouter();
-  const [userData, setUserData] = useState(null);
+  // const userid = localStorage.getItem("userId");
+  // console.log(userid);
 
-  const lastmonth = {
-    incomeTotal: "1222",
-    expenseTotal: "12456",
-    increse: "12",
-    decrease: "10",
-  };
   useEffect(() => {
     const storedUserData = localStorage.getItem("userId");
     if (!storedUserData) {
@@ -25,11 +21,11 @@ export default function Dashboard() {
   }, [router]);
 
   return (
-    <main className="w-screen flex  flex-col justify-center items-center">
+    <main className="w-screen flex  flex-col justify-center items-center ">
       {/* /////////////////// */}
       <Navbar />
       {/* /////////////////////// */}
-      <div className="flex justify-between flex-col max-w-6xl container p-4">
+      <div className="flex justify-between flex-col max-w-6xl container p-4 gap-4">
         <div className="grid grid-cols-3 gap-4">
           {/* card */}
           <div className="card bg-slate-800 h-52  shadow-xl rounded-2xl">
@@ -95,7 +91,15 @@ export default function Dashboard() {
         </div>
         <div className="w-full p-4">
           <h3 className="font-bold text-2xl p-4 ">Last Record</h3>
-          <RecordList />
+          <div className=" flex flex-col gap-2">
+            {listdatas.map((data, index) => {
+              return (
+                <div key={index}>
+                  <ListItem data={data} />
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </main>
