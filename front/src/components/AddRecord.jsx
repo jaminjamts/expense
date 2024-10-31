@@ -1,26 +1,40 @@
-import { useState } from "react";
+import { BACKEND_ENDPOINT } from "@/datas/datas";
+import { useState, useEffect } from "react";
 
 export const AddRecord = ({ recordHandler }) => {
   const [transaction, setTransaction] = useState({});
-  const userId = localStorage.getItem("userId");
+
   const stopPropagation = (event) => {
     event.stopPropagation();
   };
 
   const handleRecordDatas = (event) => {
     const { name, value } = event.target;
-    setTransaction((prev) => ({ ...prev, [name]: value }));
+    setTransaction((prev) => ({ ...prev, [name]: value, user_id }));
   };
-  console.log(userId, transaction);
 
-  const sendRecordData = () => {
-    recordHandler(transaction);
+  const sendRecordData = async () => {
+    try {
+      const options = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(transaction),
+      };
+
+      const response = await fetch(`${BACKEND_ENDPOINT}/transaction`, options);
+      const data = await response.json();
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
+  useEffect(() => {}, []);
 
   return (
     <div
       onClick={recordHandler}
-      className="absolute top-0 left-0 flex-col w-screen h-screen flex items-center justify-center "
+      className="absolute top-0 left-0 flex-col w-screen h-screen flex items-center justify-center"
     >
       <div
         onClick={stopPropagation}
@@ -32,12 +46,11 @@ export const AddRecord = ({ recordHandler }) => {
             name="transaction_type"
             className="flex px-4 py-2 rounded-md"
             onChange={handleRecordDatas}
-            id="trans-type"
             defaultValue="INC"
             required
           >
-            <option value="INC">Income</option>
-            <option value="EXP">Expense</option>
+            <option value={"INC"}>Income</option>
+            <option value={"EXP"}>Expense</option>
           </select>
           <label
             htmlFor="amount"
@@ -47,7 +60,7 @@ export const AddRecord = ({ recordHandler }) => {
             <input
               className="border bg-slate-200"
               name="amount"
-              placeholder="$ 00"
+              placeholder="$00"
               type="number"
               onChange={handleRecordDatas}
             />
@@ -56,7 +69,7 @@ export const AddRecord = ({ recordHandler }) => {
             Category
           </label>
           <select
-            name="category"
+            name="category_id"
             className="border flex flex-col px-4 py-2 rounded-lg bg-slate-200"
             defaultValue="default"
             onChange={handleRecordDatas}
@@ -64,33 +77,28 @@ export const AddRecord = ({ recordHandler }) => {
             <option value="default" hidden>
               Choose
             </option>
-            <option value="food">food</option>
+            <option value="4">food</option>
             {/* Add additional options here */}
           </select>
 
           <input
             onChange={handleRecordDatas}
             className="border"
-            name="date"
+            name="createdat"
             type="date"
           />
+
           <input
             className="border"
             onChange={handleRecordDatas}
-            name="time"
-            type="time"
-          />
-          <input
-            className="border"
-            onChange={handleRecordDatas}
-            name="payee"
+            name="name"
             placeholder="Payee"
             type="text"
           />
           <textarea
             onChange={handleRecordDatas}
             className="border"
-            name="notes"
+            name="description"
             placeholder="Write here"
           />
         </div>

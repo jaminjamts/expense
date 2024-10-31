@@ -1,13 +1,13 @@
 export const ListItem = ({ data }) => {
-  if (data.type === "EXP") {
+  if (data.transaction_type === "EXP") {
     return (
       <main className=" flex w-full justify-between items-center  bg-base-100 shadow-xl rounded-2xl bg-[#F54949] px-5 text-slate-200">
         <div className="flex gap-4">
           <p className="p-2 size-10 flex items-center justify-center">
-            {data.iconId}
+            {data.category_id}
           </p>
           <div className="">
-            <p className="text-xl">{data.category}</p>
+            <p className="text-xl">{data.name}</p>
             <p className="text-sm">{data.hour} hours ago</p>
           </div>
         </div>
@@ -19,7 +19,7 @@ export const ListItem = ({ data }) => {
       <main className=" flex w-full justify-between items-center  bg-base-100 shadow-xl rounded-2xl bg-[#23E01F] px-5 text-slate-200">
         <div className="flex gap-4">
           <p className="p-2 size-10 flex items-center justify-center">
-            {data.iconId}
+            {data.category_id}
           </p>
           <div className="">
             <p className="text-xl">{data.category}</p>

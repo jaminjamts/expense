@@ -91,23 +91,34 @@ app.post("/category", async (req, res) => {
 });
 
 ////////////////////////////////////////////// transaction get
-app.get("/transactions", async (req, res) => {
-  const { id } = req.body;
-  try {
-    const response = await sql`SELECT * FROM record WHERE id = ${id};`;
-    res.status(200).json({ success: true, data: response });
-  } catch (error) {
-    console.log("fetch error record");
-  }
-});
-///////////////////////////////////////////// transaction post
-app.post("/transaction", async (req, res) => {
-  const { user_id, name, amount, transaction_type, description, category_id } =
-    req.body;
+app.post("/transactions", async (req, res) => {
+  const { user_id } = req.body;
+
   try {
     const response =
-      await sql`INSERT INTO record (user_id, name, amount, transaction_type, description, category_id)
-VALUES (${user_id},${name} ,${amount},${transaction_type},${description},${category_id}) RETURNING *;`;
+      await sql`SELECT * FROM record WHERE user_id = ${user_id};`;
+    res.status(200).json({ success: true, data: response });
+  } catch (error) {
+    console.error("Error fetching record:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch record" });
+  }
+});
+
+///////////////////////////////////////////// transaction post
+app.post("/transaction", async (req, res) => {
+  const {
+    user_id,
+    name,
+    amount,
+    transaction_type,
+    createdat,
+    description,
+    category_id,
+  } = req.body;
+  try {
+    const response =
+      await sql`INSERT INTO record (user_id, name, amount, transaction_type, description,createdat, category_id)
+VALUES (${user_id},${name} ,${amount},${transaction_type},${description},${createdat},${category_id}) RETURNING *;`;
     res.status(201).json({ success: true, data: response });
   } catch (error) {
     console.log("fetch error");

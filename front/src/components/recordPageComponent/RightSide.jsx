@@ -1,7 +1,37 @@
-import { listdatas } from "@/datas/datas";
-import { ListItem } from "../ListItem";
+"use client";
 
-export const RightSide = () => {
+import { BACKEND_ENDPOINT } from "@/datas/datas";
+import { ListItem } from "../ListItem";
+import { useEffect, useState } from "react";
+
+export const RightSide = ({ userId }) => {
+  const [transactionData, setTransactionData] = useState([]);
+
+  const fetchTransactionData = async () => {
+    try {
+      const options = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({ user_id: userId }),
+      };
+
+      const response = await fetch(`${BACKEND_ENDPOINT}/transactions`, options);
+      const data = await response.json();
+      setTransactionData(data.data);
+    } catch (error) {
+      console.error("Error fetching transaction data:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (userId) {
+      fetchTransactionData();
+    }
+  }, [userId]);
+
   return (
     <main className="w-full flex flex-col gap-4 p-4">
       <div className="flex justify-between">
@@ -20,26 +50,15 @@ export const RightSide = () => {
 
       <div className="flex flex-col gap-3">
         <h3>Today</h3>
-        {listdatas.map((data, index) => {
-          return (
+        {transactionData.length > 0 ? (
+          transactionData.map((data, index) => (
             <div key={index}>
               <ListItem data={data} />
             </div>
-          );
-        })}
-      </div>
-
-      <div>
-        <h3>Yesterday</h3>
-        <div className="flex flex-col gap-2">
-          {listdatas.map((data, index) => {
-            return (
-              <div key={index}>
-                <ListItem data={data} />
-              </div>
-            );
-          })}
-        </div>
+          ))
+        ) : (
+          <p>No transactions for today.</p>
+        )}
       </div>
     </main>
   );

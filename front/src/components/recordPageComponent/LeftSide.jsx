@@ -4,31 +4,9 @@ import { AddRecord } from "../AddRecord";
 import { AddCategory } from "../AddCategory";
 
 export const LeftSide = () => {
-  const datas = [
-    {
-      name: "Food & Drinks",
-      icon: "local_dining",
-    },
-    {
-      name: "Shopping",
-      icon: "shopping_cart",
-    },
-    {
-      name: "Transport",
-      icon: "directions_bus",
-    },
-    {
-      name: "Entertainment",
-      icon: "movie",
-    },
-    {
-      name: "Health & Fitness",
-      icon: "fitness_center",
-    },
-  ];
   const [visible, setVisible] = useState(false);
   const [categoryVisible, setCategoryVisible] = useState(false);
-  // const userId = localStorage.getItem("userId");
+
   const categoryHandler = () => {
     setCategoryVisible(!categoryVisible);
   };
@@ -73,13 +51,7 @@ export const LeftSide = () => {
       </div>
       <div className="flex flex-col gap-2">
         <h3>Category</h3>
-        {datas.map((data, index) => {
-          return (
-            <div key={index}>
-              <Categories name={data.name} icon={data.icon} />
-            </div>
-          );
-        })}
+
         <div>
           <button onClick={categoryHandler}>+ Add Category</button>
           {categoryVisible && <AddCategory categoryHandler={categoryHandler} />}

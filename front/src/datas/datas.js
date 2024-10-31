@@ -1,22 +1,14 @@
-export const lastmonth = {
-  incomeTotal: "1222",
-  expenseTotal: "12456",
-  increse: "12",
-  decrease: "10",
-};
-export const listdatas = [
+export const lastMonth = [
   {
-    iconId: "1",
-    category: "Lending & Renting",
-    hour: "3",
-    amount: "1500",
-    type: "EXP",
+    type: "income",
+    total: "12222",
+    percentage: "12",
   },
   {
-    iconId: "1",
-    category: "Lending & Renting",
-    hour: "3",
-    amount: "1500",
-    type: "INC",
+    type: "expense",
+    total: "2456",
+    percentage: "10",
   },
 ];
+
+export const BACKEND_ENDPOINT = process.env.API_URL;
