@@ -67,9 +67,10 @@ app.post("/sign-in", async (req, res) => {
   }
 });
 /////////////////////////////////////////////// category
-app.get("/categorys", async (_, res) => {
+app.get("/categories/:id", async (req, res) => {
+  const id = req.params.id;
   try {
-    const response = await sql`SELECT * FROM category;`;
+    const response = await sql`SELECT * FROM category WHERE user_id =${id};`;
     res.send({ success: true, data: response });
   } catch (error) {
     res.status(500).json({ success: "db false" });
@@ -78,12 +79,13 @@ app.get("/categorys", async (_, res) => {
 
 ////////////////////////////////////////////// ADD categoty
 app.post("/category", async (req, res) => {
-  const { name, description, category_icon, icon_color } = req.body;
+  const { categoryName, iconId, color, user_id } = req.body;
 
   try {
     const response =
-      await sql`INSERT INTO category (name, description, category_icon, icon_color)
-    VALUES(${name}, ${description}, ${category_icon}, ${icon_color} ) RETURNING *;`;
+      await sql`INSERT INTO category (name, category_icon, icon_color,user_id)
+    VALUES(${categoryName}, ${iconId}, ${color}, ${user_id} ) RETURNING *;`;
+
     res.status(201).json({ success: true, data: response });
   } catch (error) {
     res.status(500).json({ success: false });
@@ -111,14 +113,15 @@ app.post("/transaction", async (req, res) => {
     name,
     amount,
     transaction_type,
-    createdat,
+    createdAt,
     description,
     category_id,
   } = req.body;
   try {
     const response =
-      await sql`INSERT INTO record (user_id, name, amount, transaction_type, description,createdat, category_id)
-VALUES (${user_id},${name} ,${amount},${transaction_type},${description},${createdat},${category_id}) RETURNING *;`;
+      await sql`INSERT INTO record (user_id, name, amount, transaction_type, description, createdAt, category_id)
+VALUES (${user_id}, ${name}, ${amount},${transaction_type} , ${description}, ${createdAt}, ${category_id}) RETURNING *;
+`;
     res.status(201).json({ success: true, data: response });
   } catch (error) {
     console.log("fetch error");
