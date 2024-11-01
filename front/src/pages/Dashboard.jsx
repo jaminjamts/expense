@@ -10,7 +10,8 @@ import {
   MonthCard,
   PieChart,
 } from "@/components/dashboardPageComponent";
-import { BACKEND_ENDPOINT, lastMonth } from "@/datas/datas";
+import { BACKEND_ENDPOINT } from "@/constants/Constants";
+import { lastMonth } from "@/datas/datas";
 
 export default function Dashboard() {
   const router = useRouter();

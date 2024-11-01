@@ -1,7 +1,7 @@
-import { BACKEND_ENDPOINT } from "@/datas/datas";
+import { BACKEND_ENDPOINT } from "@/constants/Constants";
 import { useState, useEffect } from "react";
 
-export const AddRecord = ({ recordHandler }) => {
+export const AddRecord = ({ recordHandler, user_id, categories }) => {
   const [transaction, setTransaction] = useState({});
 
   const stopPropagation = (event) => {
@@ -10,10 +10,16 @@ export const AddRecord = ({ recordHandler }) => {
 
   const handleRecordDatas = (event) => {
     const { name, value } = event.target;
-    setTransaction((prev) => ({ ...prev, [name]: value, user_id }));
+    setTransaction((prev) => ({
+      ...prev,
+      [name]: value,
+      user_id: Number(user_id),
+    }));
   };
 
   const sendRecordData = async () => {
+    console.log(transaction);
+
     try {
       const options = {
         method: "POST",
@@ -25,11 +31,16 @@ export const AddRecord = ({ recordHandler }) => {
 
       const response = await fetch(`${BACKEND_ENDPOINT}/transaction`, options);
       const data = await response.json();
+      recordHandler();
     } catch (error) {
       console.error("Error:", error);
     }
   };
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (user_id) {
+      sendRecordData();
+    }
+  }, [user_id]);
 
   return (
     <div
@@ -77,8 +88,13 @@ export const AddRecord = ({ recordHandler }) => {
             <option value="default" hidden>
               Choose
             </option>
-            <option value="4">food</option>
-            {/* Add additional options here */}
+            {categories.map((category, index) => {
+              return (
+                <option key={index} value={category.id}>
+                  {category.name}
+                </option>
+              );
+            })}
           </select>
 
           <input

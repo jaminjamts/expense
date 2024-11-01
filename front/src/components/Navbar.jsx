@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AddRecord } from "./AddRecord";
 
-export default function Navbar() {
+export default function Navbar({ userID, categories }) {
   const [visible, setVisible] = useState(false);
   const [logOutModal, setLogOutModal] = useState(false);
   const handleLogOut = () => {
@@ -17,7 +17,7 @@ export default function Navbar() {
   const recordHandler = () => {
     setVisible(!visible);
   };
-  useEffect(() => {}, []);
+
   return (
     <div className="flex justify-between w-full max-w-6xl px-4">
       <div className="flex gap-4 p-2 items-center">
@@ -36,7 +36,13 @@ export default function Navbar() {
             + record
           </button>
         </div>
-        {visible && <AddRecord recordHandler={recordHandler} />}
+        {visible && (
+          <AddRecord
+            recordHandler={recordHandler}
+            user_id={userID}
+            categories={categories}
+          />
+        )}
         {/* <img src="./" alt="profile img" width={"20px"} /> */}
         <button onClick={handleLogOut}>Logout</button>
         {logOutModal && (

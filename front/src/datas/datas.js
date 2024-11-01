@@ -10,5 +10,3 @@ export const lastMonth = [
     percentage: "10",
   },
 ];
-
-export const BACKEND_ENDPOINT = process.env.API_URL;

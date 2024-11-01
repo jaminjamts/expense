@@ -1,17 +1,13 @@
-import { Icons } from "@/constants/Icons";
+import { BACKEND_ENDPOINT, Colors, Icons } from "@/constants/Constants";
 import { HomeIcon } from "@/icons";
+
 import { useEffect, useState } from "react";
 
-export const AddCategory = ({ categoryHandler }) => {
-  const [selectedIconId, setSelectedIconId] = useState(null);
-  const [selectedColor, setSelectedColor] = useState(null);
-  const [categoryName, setCategoryName] = useState(null);
-  const [categoryData, setCategoryData] = useState({});
+export const AddCategory = ({ categoryHandler, setCategories, userID }) => {
+  const [selectedIconId, setSelectedIconId] = useState("");
+  const [selectedColor, setSelectedColor] = useState("");
+  const [categoryName, setCategoryName] = useState("");
   const [categoriesVisible, setCategoriesVisible] = useState(false);
-
-  const handleCategoryDropdown = () => {
-    setCategoriesVisible(!categoriesVisible);
-  };
 
   const handleIconSelect = (iconId) => {
     setSelectedIconId(iconId);
@@ -22,31 +18,44 @@ export const AddCategory = ({ categoryHandler }) => {
   };
 
   const categoryNameHandler = (event) => {
-    const { value } = event.target;
-    setCategoryName(value);
+    setCategoryName(event.target.value);
   };
-  const setArray = () => {
-    setCategoryData({
+
+  const handleCategoryDropdown = () => {
+    setCategoriesVisible(!categoriesVisible);
+  };
+
+  const setArray = async () => {
+    const newCategory = {
+      user_id: Number(userID),
       iconId: selectedIconId,
       color: selectedColor,
       categoryName: categoryName,
-    });
+    };
 
+    try {
+      const options = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newCategory),
+      };
+
+      const response = await fetch(`${BACKEND_ENDPOINT}/category`, options);
+      const iconData = await response.json();
+      if (iconData.success == true) {
+        alert("icon amjilttai nemegdlee");
+      }
+    } catch (error) {
+      throw error;
+    }
+    setCategories((prev) => [...prev, newCategory]);
+
+    categoryHandler();
     setSelectedIconId("");
     setSelectedColor("");
     setCategoryName("");
   };
-  console.log(categoryData);
 
-  const Colors = [
-    { id: 1, code: "blue", value: "#0166FF" },
-    { id: 2, code: "cyan", value: "#01B3FF" },
-    { id: 3, code: "green", value: "#41CC00" },
-    { id: 4, code: "yellow", value: "#f9D100" },
-    { id: 5, code: "orange", value: "#FF7B01" },
-    { id: 6, code: "purple", value: "#AE01FF" },
-    { id: 7, code: "red", value: "#FF0101" },
-  ];
   useEffect(() => {}, []);
 
   return (

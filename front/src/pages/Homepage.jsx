@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import Load from "@/components/Load";
-import { BACKEND_ENDPOINT } from "@/datas/datas";
+import { BACKEND_ENDPOINT } from "@/constants/Constants";
 
 export default function SignIn() {
   const [user, setUser] = useState({});
@@ -32,7 +32,7 @@ export default function SignIn() {
       const userData = await response.json();
       if (userData.success === "true") {
         // toast.success("Successfully signed in");
-        localStorage.setItem("userId", JSON.stringify(userData.data));
+        window.localStorage.setItem("userId", JSON.stringify(userData.data));
         router.push("/dashboard");
       } else if (userData) {
         toast.error(userData.message);

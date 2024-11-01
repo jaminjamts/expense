@@ -1,10 +1,9 @@
 "use client";
-
-import { BACKEND_ENDPOINT } from "@/datas/datas";
+import { BACKEND_ENDPOINT } from "@/constants/Constants";
 import { ListItem } from "../ListItem";
 import { useEffect, useState } from "react";
 
-export const RightSide = ({ userId }) => {
+export const RightSide = ({ userID }) => {
   const [transactionData, setTransactionData] = useState([]);
 
   const fetchTransactionData = async () => {
@@ -15,22 +14,22 @@ export const RightSide = ({ userId }) => {
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
         },
-        body: JSON.stringify({ user_id: userId }),
+        body: JSON.stringify({ user_id: userID }),
       };
 
       const response = await fetch(`${BACKEND_ENDPOINT}/transactions`, options);
       const data = await response.json();
-      setTransactionData(data.data);
+      setTransactionData(data?.data);
     } catch (error) {
       console.error("Error fetching transaction data:", error);
     }
   };
 
   useEffect(() => {
-    if (userId) {
+    if (userID) {
       fetchTransactionData();
     }
-  }, [userId]);
+  }, [userID]);
 
   return (
     <main className="w-full flex flex-col gap-4 p-4">
@@ -50,8 +49,8 @@ export const RightSide = ({ userId }) => {
 
       <div className="flex flex-col gap-3">
         <h3>Today</h3>
-        {transactionData.length > 0 ? (
-          transactionData.map((data, index) => (
+        {transactionData?.length > 0 ? (
+          transactionData?.map((data, index) => (
             <div key={index}>
               <ListItem data={data} />
             </div>

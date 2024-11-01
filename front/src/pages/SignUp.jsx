@@ -1,6 +1,6 @@
 "use client";
 
-import { BACKEND_ENDPOINT } from "@/datas/datas";
+import { BACKEND_ENDPOINT } from "@/constants/Constants";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
