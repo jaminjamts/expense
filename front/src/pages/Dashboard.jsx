@@ -1,59 +1,53 @@
 "use client";
-
 import { useRouter } from "next/navigation";
 import Navbar from "../components/Navbar";
 import { ListItem } from "../components/ListItem";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { BACKEND_ENDPOINT } from "@/constants/Constants";
 import {
   BarChart,
-  MonthCard,
+  ExpMonthCard,
+  IncMonthCard,
   PieChart,
 } from "@/components/dashboardPageComponent";
-import { BACKEND_ENDPOINT } from "@/constants/Constants";
-import { lastMonth } from "@/datas/datas";
 
 export default function Dashboard() {
   const router = useRouter();
-  const [userId, setUserId] = useState("");
+  const [userID, setUserID] = useState();
   const [userDatas, setUserDatas] = useState([]);
-  const storedUserData = localStorage.getItem("userId");
 
   const fetchdatas = async () => {
-    const options = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify({ user_id: userId }),
-    };
-
+    if (!userID) return;
     try {
-      const response = await fetch(`${BACKEND_ENDPOINT}/transactions`, options);
+      const response = await fetch(
+        `${BACKEND_ENDPOINT}/transactions?userID=${userID}`
+      );
       const datas = await response?.json();
       setUserDatas(datas.data);
-      console.log(datas.data);
     } catch (error) {
       console.log("error", error);
     }
   };
 
   useEffect(() => {
-    if (storedUserData) {
-      setUserId(storedUserData);
-      fetchdatas();
+    if (typeof window !== "undefined") {
+      const storedUserData = window.localStorage?.getItem("userId");
+      if (storedUserData) {
+        setUserID(storedUserData);
+      }
+      if (!storedUserData) {
+        toast.warning("Please sign in");
+        router.push("/");
+      }
     }
-    if (!storedUserData) {
-      toast.warning("Please sign in");
-      router.push("/");
-    }
-  }, [userId]);
+    fetchdatas();
+  }, [userID]);
 
   return (
-    <main className="w-screen flex  flex-col justify-center items-center bg-[#BBA58F]">
+    <main className="w-screen flex flex-col justify-center items-center bg-[#BBA58F]">
       {/* /////////////////// */}
-      <Navbar userId={userId} />
+      <Navbar userID={userID} />
       {/* /////////////////////// */}
       <div className="flex justify-between flex-col max-w-6xl container p-4 gap-4">
         <div className="grid grid-cols-3 gap-4">
@@ -69,13 +63,8 @@ export default function Dashboard() {
               <p className="text-gray-200 text-3xl">100000$</p>
             </div>
           </div>
-          {lastMonth.map((data, index) => {
-            return (
-              <div key={index}>
-                <MonthCard data={data} />
-              </div>
-            );
-          })}
+          <IncMonthCard userID={userID} />
+          <ExpMonthCard userID={userID} />
         </div>
         {/* charts */}
         <div className="grid grid-cols-2 gap-4">

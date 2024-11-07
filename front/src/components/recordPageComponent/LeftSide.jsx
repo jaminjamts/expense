@@ -2,17 +2,25 @@ import { useEffect, useState } from "react";
 import { AddRecord } from "../AddRecord";
 import { AddCategory } from "../AddCategory";
 import { HomeIcon, HouseLineIcon, LeapIcon } from "@/icons";
+import { IoIosEye } from "react-icons/io";
 
-export const LeftSide = ({ userID, categories, setCategories }) => {
+export const LeftSide = ({
+  userID,
+  categories,
+  setCategories,
+  setTypes,
+  checkedCategory,
+}) => {
   const [visible, setVisible] = useState(false);
   const [categoryVisible, setCategoryVisible] = useState(false);
-
-  // Icon mapping
-  const icons = [
+  const typesGetValue = (e) => {
+    setTypes(e);
+  };
+  const [icons, setIcons] = useState([
     { id: 1, Icon: HomeIcon },
     { id: 2, Icon: HouseLineIcon },
     { id: 3, Icon: LeapIcon },
-  ];
+  ]);
 
   const categoryHandler = () => setCategoryVisible(!categoryVisible);
   const recordHandler = () => setVisible(!visible);
@@ -29,13 +37,7 @@ export const LeftSide = ({ userID, categories, setCategories }) => {
         >
           + Add
         </button>
-        {visible && (
-          <AddRecord
-            recordHandler={recordHandler}
-            categories={categories}
-            user_id={userID}
-          />
-        )}
+        {visible && <AddRecord recordHandler={recordHandler} userID={userID} />}
       </div>
       <div>
         <input
@@ -48,15 +50,34 @@ export const LeftSide = ({ userID, categories, setCategories }) => {
         <h3>Types</h3>
         <div className="flex flex-col gap-2">
           <label htmlFor="all">
-            <input type="radio" value="all" name="types" />
+            <input
+              defaultChecked
+              type="radio"
+              onClick={() => {
+                typesGetValue("ALL");
+              }}
+              name="types"
+            />
             All
           </label>
           <label htmlFor="income">
-            <input type="radio" value="income" name="types" />
+            <input
+              type="radio"
+              onClick={() => {
+                typesGetValue("INC");
+              }}
+              name="types"
+            />
             Income
           </label>
           <label htmlFor="expense">
-            <input type="radio" value="expense" name="types" />
+            <input
+              type="radio"
+              onClick={() => {
+                typesGetValue("EXP");
+              }}
+              name="types"
+            />
             Expense
           </label>
         </div>
@@ -65,13 +86,23 @@ export const LeftSide = ({ userID, categories, setCategories }) => {
         <h3>Category</h3>
         <div>
           {categories?.map((category, index) => {
-            const Icon = icons.find(
-              (icon) => icon.id == category?.category_icon
-            ).Icon;
             return (
-              <div key={index} className="flex items-center gap-2">
-                <Icon color={category.icon_color} />
-                <span>{category.name}</span>
+              <div
+                key={index}
+                className="flex justify-between gap-2 items-center border-b-2"
+              >
+                <div className="flex gap-4 items-center">
+                  <IoIosEye />
+                  <span>{category.name}</span>
+                </div>
+                <div>
+                  <input
+                    type="checkbox"
+                    onChange={() => {
+                      checkedCategory(category.name);
+                    }}
+                  />
+                </div>
               </div>
             );
           })}

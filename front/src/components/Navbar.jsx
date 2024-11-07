@@ -36,13 +36,7 @@ export default function Navbar({ userID, categories }) {
             + record
           </button>
         </div>
-        {visible && (
-          <AddRecord
-            recordHandler={recordHandler}
-            user_id={userID}
-            categories={categories}
-          />
-        )}
+        {visible && <AddRecord recordHandler={recordHandler} userID={userID} />}
         {/* <img src="./" alt="profile img" width={"20px"} /> */}
         <button onClick={handleLogOut}>Logout</button>
         {logOutModal && (

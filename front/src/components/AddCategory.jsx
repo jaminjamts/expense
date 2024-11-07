@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 export const AddCategory = ({ categoryHandler, setCategories, userID }) => {
   const [selectedIconId, setSelectedIconId] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
-  const [categoryName, setCategoryName] = useState("");
+  const [name, setName] = useState("");
   const [categoriesVisible, setCategoriesVisible] = useState(false);
 
   const handleIconSelect = (iconId) => {
@@ -18,7 +18,7 @@ export const AddCategory = ({ categoryHandler, setCategories, userID }) => {
   };
 
   const categoryNameHandler = (event) => {
-    setCategoryName(event.target.value);
+    setName(event.target.value);
   };
 
   const handleCategoryDropdown = () => {
@@ -30,8 +30,9 @@ export const AddCategory = ({ categoryHandler, setCategories, userID }) => {
       user_id: Number(userID),
       iconId: selectedIconId,
       color: selectedColor,
-      categoryName: categoryName,
+      name: name,
     };
+    console.log(newCategory);
 
     try {
       const options = {
@@ -45,15 +46,15 @@ export const AddCategory = ({ categoryHandler, setCategories, userID }) => {
       if (iconData.success == true) {
         alert("icon amjilttai nemegdlee");
       }
+      setCategories((prev) => [...prev, newCategory]);
     } catch (error) {
       throw error;
     }
-    setCategories((prev) => [...prev, newCategory]);
 
     categoryHandler();
     setSelectedIconId("");
     setSelectedColor("");
-    setCategoryName("");
+    setName("");
   };
 
   useEffect(() => {}, []);
@@ -72,9 +73,33 @@ export const AddCategory = ({ categoryHandler, setCategories, userID }) => {
         </div>
         <div className="flex gap-2">
           <div className="flex flex-col ">
-            <button onClick={handleCategoryDropdown}>
-              <HomeIcon color={"black"} />
-            </button>
+            <div className="flex gap-4">
+              <button className="p-2" onClick={handleCategoryDropdown}>
+                <HomeIcon color={"black"} />
+              </button>
+              <label htmlFor="name">
+                <input
+                  onChange={categoryNameHandler}
+                  type="text"
+                  name="name"
+                  placeholder="New Category Name"
+                  className="p-2 rounded-md w-full"
+                />
+              </label>
+            </div>
+
+            <div className="flex justify-center items-center w-full">
+              <button
+                className="bg-green-400 text-white rounded-xl w-full py-2"
+                onClick={setArray}
+              >
+                Add
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="relative flex flex-col">
+          <div className="absolute left-[-full]">
             {categoriesVisible && (
               <div className="flex gap-4 flex-col max-w-[500px]">
                 <div className="flex gap-4">
@@ -82,15 +107,15 @@ export const AddCategory = ({ categoryHandler, setCategories, userID }) => {
                     <button
                       onClick={() => handleIconSelect(icon.id)}
                       key={icon.id}
-                      className={`p-2 rounded ${
-                        selectedIconId === icon.id ? "bg-gray-300" : ""
+                      className={`p-2 rounded w-6 h-6  ${
+                        selectedIconId === icon.id ? "bg-gray-300 w-6 h-6" : ""
                       }`}
                     >
                       {icon.icon}
                     </button>
                   ))}
                 </div>
-                <div className="flex gap-4">
+                <div className="flex gap-4 p-2">
                   {Colors.map((color) => (
                     <button
                       key={color.id}
@@ -105,23 +130,6 @@ export const AddCategory = ({ categoryHandler, setCategories, userID }) => {
               </div>
             )}
           </div>
-          <label htmlFor="name">
-            <input
-              onChange={categoryNameHandler}
-              type="text"
-              name="categoryName"
-              placeholder="New Category Name"
-              className="p-2 rounded-md w-full"
-            />
-          </label>
-        </div>
-        <div className="flex justify-center items-center w-full">
-          <button
-            className="bg-green-400 text-white rounded-xl w-full py-2"
-            onClick={setArray}
-          >
-            Add
-          </button>
         </div>
       </div>
     </main>

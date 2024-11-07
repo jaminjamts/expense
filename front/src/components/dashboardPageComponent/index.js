@@ -1,3 +1,4 @@
 export * from "./BarChart";
-export * from "./MonthCard";
+export * from "./ExpMonthCard";
+export * from "./IncMonthCard";
 export * from "./PieChart";

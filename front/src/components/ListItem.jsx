@@ -1,12 +1,14 @@
+import { Icons } from "@/constants/Constants";
+
 export const ListItem = ({ data }) => {
   if (data.transaction_type === "EXP") {
     return (
-      <main className=" flex w-full justify-between items-center  bg-base-100 shadow-xl rounded-2xl bg-[#F54949] px-5 text-slate-200">
+      <main className="flex w-full justify-between items-center bg-base-100 shadow-xl rounded-2xl bg-[#F54949] px-5 text-slate-200">
         <div className="flex gap-4">
           <p className="p-2 size-10 flex items-center justify-center">
-            {data.category_id}
+            {Icons[2].icon}
           </p>
-          <div className="">
+          <div>
             <p className="text-xl">{data.name}</p>
             <p className="text-sm">{data.hour} hours ago</p>
           </div>
@@ -16,13 +18,13 @@ export const ListItem = ({ data }) => {
     );
   } else {
     return (
-      <main className=" flex w-full justify-between items-center  bg-base-100 shadow-xl rounded-2xl bg-[#23E01F] px-5 text-slate-200">
+      <main className="flex w-full justify-between items-center bg-base-100 shadow-xl rounded-2xl bg-[#23E01F] px-5 text-slate-200">
         <div className="flex gap-4">
           <p className="p-2 size-10 flex items-center justify-center">
-            {data.category_id}
+            {Icons[0].icon}
           </p>
-          <div className="">
-            <p className="text-xl">{data.category}</p>
+          <div>
+            <p className="text-xl">{data.name}</p>
             <p className="text-sm">{data.hour} hours ago</p>
           </div>
         </div>

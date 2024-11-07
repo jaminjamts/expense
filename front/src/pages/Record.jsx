@@ -10,17 +10,43 @@ import { toast } from "react-toastify";
 export default function RecordPage() {
   const [userID, setUserID] = useState();
   const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState([]);
+  const [transactionData, setTransactionData] = useState([]);
+  const [types, setTypes] = useState("ALL");
   const router = useRouter();
 
-  const fetchData = async () => {
+  const fetchTransactionData = async () => {
+    if (!userID) return;
+    try {
+      const response = await fetch(
+        `${BACKEND_ENDPOINT}/transactions?userID=${userID}&types=${types}`
+      );
+      const data = await response.json();
+      setTransactionData(data?.data);
+    } catch (error) {
+      console.error("Error fetching transaction data:", error);
+    }
+  };
+  //
+  const fetchCategoriesData = async () => {
     try {
       const response = await fetch(`${BACKEND_ENDPOINT}/categories/${userID}`);
       const data = await response.json();
-
       setCategories(data.data || []);
     } catch (error) {
       console.error("Error fetching categories:", error);
     }
+  };
+  //
+  const checkedCategory = (name) => {
+    setSelectedCategory((prev) => {
+      const exists = prev.some((data) => data.name === name);
+      if (exists) {
+        return prev.filter((data) => data.name !== name);
+      } else {
+        return [...prev, { name }];
+      }
+    });
   };
 
   useEffect(() => {
@@ -35,9 +61,10 @@ export default function RecordPage() {
       }
     }
     if (userID) {
-      fetchData();
+      fetchCategoriesData();
     }
-  }, [userID]);
+    fetchTransactionData();
+  }, [userID, types]);
 
   return (
     <main className="w-screen flex flex-col items-center bg-slate-200 h-full min-h-screen gap-8">
@@ -48,10 +75,17 @@ export default function RecordPage() {
             userID={userID}
             categories={categories}
             setCategories={setCategories}
+            setTypes={setTypes}
+            types={types}
+            checkedCategory={checkedCategory}
           />
         </div>
         <div className="w-2/3 border rounded-xl bg-slate-50">
-          <RightSide userID={userID} />
+          <RightSide
+            userID={userID}
+            transactionData={transactionData}
+            selectedCategory={selectedCategory}
+          />
         </div>
       </div>
     </main>

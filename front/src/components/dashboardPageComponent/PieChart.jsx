@@ -93,7 +93,7 @@ export const PieChart = () => {
   return (
     <div className="h-full w-full flex gap-3 justify-between flex-col p-5 rounded-lg ">
       <h1 className="w-full mx-auto text-xl font-semibold capitalize text-center text-gray-700">
-        Show the expense percentage for each category.
+        Last month expense percentage for each category.
       </h1>
       <div className="w-full flex justify-center mx-auto my-auto">
         <div className="pt-0 rounded-xl w-full h-full flex justify-center ">
