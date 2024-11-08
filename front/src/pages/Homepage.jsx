@@ -31,7 +31,6 @@ export default function SignIn() {
       const response = await fetch(`${BACKEND_ENDPOINT}/sign-in`, options);
       const userData = await response.json();
       if (userData.success === "true") {
-        // toast.success("Successfully signed in");
         window.localStorage.setItem("userId", JSON.stringify(userData.data));
         router.push("/dashboard");
       } else if (userData) {

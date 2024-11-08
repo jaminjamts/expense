@@ -21,7 +21,7 @@ export default function Dashboard() {
     if (!userID) return;
     try {
       const response = await fetch(
-        `${BACKEND_ENDPOINT}/transactions?userID=${userID}`
+        `${BACKEND_ENDPOINT}/transactions?userID=${userID}&types=ALL&order=ASC`
       );
       const datas = await response?.json();
       setUserDatas(datas.data);
