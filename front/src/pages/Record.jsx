@@ -13,13 +13,18 @@ export default function RecordPage() {
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [transactionData, setTransactionData] = useState([]);
   const [types, setTypes] = useState("ALL");
+  const [order, setOrder] = useState("ASC");
   const router = useRouter();
+
+  const handleOrder = (e) => {
+    setOrder(e.target.value);
+  };
 
   const fetchTransactionData = async () => {
     if (!userID) return;
     try {
       const response = await fetch(
-        `${BACKEND_ENDPOINT}/transactions?userID=${userID}&types=${types}`
+        `${BACKEND_ENDPOINT}/transactions?userID=${userID}&types=${types}&order=${order}`
       );
       const data = await response.json();
       setTransactionData(data?.data);
@@ -64,7 +69,7 @@ export default function RecordPage() {
       fetchCategoriesData();
     }
     fetchTransactionData();
-  }, [userID, types]);
+  }, [userID, types, order]);
 
   return (
     <main className="w-screen flex flex-col items-center bg-slate-200 h-full min-h-screen gap-8">
@@ -85,6 +90,8 @@ export default function RecordPage() {
             userID={userID}
             transactionData={transactionData}
             selectedCategory={selectedCategory}
+            handleOrder={handleOrder}
+            order={order}
           />
         </div>
       </div>

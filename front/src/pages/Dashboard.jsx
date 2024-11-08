@@ -69,11 +69,11 @@ export default function Dashboard() {
         {/* charts */}
         <div className="grid grid-cols-2 gap-4">
           <div className="card bg-base-100 p-2  shadow-xl rounded-2xl h-[300px] bg-[#EFEFE9]">
-            <BarChart />
+            <BarChart userID={userID} />
           </div>
           {/*  */}
           <div className="card bg-base-100 p-2 shadow-xl rounded-2xl h-[300px] bg-[#EFEFE9]">
-            <PieChart />
+            <PieChart userID={userID} />
           </div>
         </div>
         <div className="w-full p-4">

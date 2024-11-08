@@ -69,11 +69,12 @@ app.post("/sign-in", async (req, res) => {
 /////////////////////////////////////////////// category
 app.get("/categories/:id", async (req, res) => {
   const id = req.params.id;
+
   try {
     const response = await sql`SELECT * FROM category WHERE user_id =${id};`;
     res.send({ success: true, data: response });
   } catch (error) {
-    res.status(500).json({ success: "db false" });
+    res.status(500).json({ success: "db false ", error, error });
   }
 });
 
@@ -96,10 +97,13 @@ app.post("/category", async (req, res) => {
 app.get("/transactions", async (req, res) => {
   const userID = req.query.userID;
   const types = req.query.types;
+  const order = req.query.order;
+
   if (types) {
     if (types === "ALL") {
-      try {
-        const response = await sql`SELECT 
+      if (order === "ASC") {
+        try {
+          const response = await sql`SELECT 
 category_icon,
 icon_color,
 b.name,
@@ -107,19 +111,45 @@ a.user_id,
 transaction_type,
 amount,
 description,
-a.updatedat
+a.updatedat   
 FROM record a
-INNER JOIN category b ON a.user_id = b.user_id AND a.category_id = b.id WHERE a.user_id=${userID} `;
-        res.status(200).json({ success: true, data: response });
-      } catch (error) {
-        console.error("Error fetching record:", error);
-        res
-          .status(500)
-          .json({ success: false, message: "Failed to fetch record" });
+INNER JOIN category b ON a.user_id = b.user_id 
+AND a.category_id = b.id WHERE a.user_id=${userID} 
+ORDER BY a.updatedat ASC;`;
+          res.status(200).json({ success: true, data: response });
+        } catch (error) {
+          console.error("Error fetching record:", error);
+          res
+            .status(500)
+            .json({ success: false, message: "Failed to ASC fetch record" });
+        }
+      } else {
+        try {
+          const response = await sql`SELECT 
+category_icon,
+icon_color,
+b.name,
+a.user_id,
+transaction_type,
+amount,
+description,
+a.updatedat   
+FROM record a
+INNER JOIN category b ON a.user_id = b.user_id 
+AND a.category_id = b.id WHERE a.user_id=${userID} 
+ORDER BY a.updatedat DESC;`;
+          res.status(200).json({ success: true, data: response });
+        } catch (error) {
+          console.error("Error fetching record:", error);
+          res
+            .status(500)
+            .json({ success: false, message: "Failed to ASC fetch record" });
+        }
       }
     } else {
-      try {
-        const response = await sql`SELECT 
+      if (order === "ASC") {
+        try {
+          const response = await sql`SELECT 
 category_icon,
 icon_color,
 b.name,
@@ -129,25 +159,43 @@ amount,
 description,
 a.updatedat
 FROM record a
-INNER JOIN category b ON a.user_id = b.user_id AND a.category_id = b.id WHERE a.user_id=${userID} AND transaction_type = ${types};`;
-        res.status(200).json({ success: true, data: response });
-      } catch (error) {
-        console.error("Error fetching record:", error);
-        res
-          .status(500)
-          .json({ success: false, message: "Failed to fetch record" });
+INNER JOIN category b ON a.user_id = b.user_id 
+AND a.category_id = b.id 
+WHERE a.user_id=${userID} 
+AND transaction_type = ${types} 
+ORDER BY a.updatedat ASC;`;
+          res.status(200).json({ success: true, data: response });
+        } catch (error) {
+          console.error("Error fetching record:", error);
+          res
+            .status(500)
+            .json({ success: false, message: "Failed to fetch record" });
+        }
+      } else {
+        try {
+          const response = await sql`SELECT 
+category_icon,
+icon_color,
+b.name,
+a.user_id,
+transaction_type,
+amount,
+description,
+a.updatedat
+FROM record a
+INNER JOIN category b ON a.user_id = b.user_id 
+AND a.category_id = b.id 
+WHERE a.user_id=${userID} 
+AND transaction_type = ${types} 
+ORDER BY a.updatedat DESC;`;
+          res.status(200).json({ success: true, data: response });
+        } catch (error) {
+          console.error("Error fetching record:", error);
+          res
+            .status(500)
+            .json({ success: false, message: "Failed to fetch record" });
+        }
       }
-    }
-  } else {
-    try {
-      const response =
-        await sql`SELECT * FROM record WHERE user_id = ${userID};`;
-      res.status(200).json({ success: true, data: response });
-    } catch (error) {
-      console.error("Error fetching record:", error);
-      res
-        .status(500)
-        .json({ success: false, message: "Failed to fetch record" });
     }
   }
 });

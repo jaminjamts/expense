@@ -1,8 +1,15 @@
 "use client";
+
 import { ListItem } from "../ListItem";
 import { useEffect, useState } from "react";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 
-export const RightSide = ({ transactionData, selectedCategory }) => {
+export const RightSide = ({
+  transactionData,
+  selectedCategory,
+  handleOrder,
+  order,
+}) => {
   const [filteredCategoryData, setfilteredCategoryData] = useState([]);
 
   const handleData = () => {
@@ -21,22 +28,30 @@ export const RightSide = ({ transactionData, selectedCategory }) => {
   return (
     <main className="w-full flex flex-col gap-4 p-4">
       <div className="flex justify-between">
-        <div className="flex gap-2">
-          <button>prev</button>
-          <h2>Last 30 Days</h2>
-          <button>next</button>
+        <div className="flex gap-2 items-center">
+          <button>
+            <FaChevronLeft />
+          </button>
+          <h2>Last month</h2>
+          <button>
+            <FaChevronRight />
+          </button>
         </div>
         <div>
-          <select name="" id="" defaultValue={"new"} className="p-4 rounded-xl">
-            <option value="new">Newest first</option>
-            <option value="old">Oldest first</option>
+          <select defaultValue={order} className="p-4 rounded-xl">
+            <option value={"ASC"} onClick={handleOrder}>
+              Newest first
+            </option>
+            <option value={"DESC"} onClick={handleOrder}>
+              Oldest first
+            </option>
           </select>
         </div>
       </div>
 
       <div className="flex flex-col gap-3">
         <h3>Today</h3>
-        <div>
+        <div className="flex flex-col gap-2">
           {selectedCategory.length > 0 ? (
             filteredCategoryData.map((data, index) => {
               return (

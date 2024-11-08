@@ -1,4 +1,5 @@
 import { HomeIcon, HouseLineIcon, LeapIcon } from "@/icons";
+export const BACKEND_ENDPOINT = process.env.API_URL;
 
 export const Icons = [
   { id: 1, icon: <HomeIcon color={"#0D0907"} /> },
@@ -19,4 +20,6 @@ export const Colors = [
   { id: 7, code: "red", value: "#FF0101" },
 ];
 
-export const BACKEND_ENDPOINT = process.env.API_URL;
+const date = new Date();
+const month = date.getMonth();
+const day = date.getDate();
